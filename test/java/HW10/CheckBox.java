@@ -3,6 +3,9 @@ package HW10;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -23,8 +26,10 @@ public class CheckBox {
     }
 
     @Test
-    public void checkboxCheck() throws InterruptedException {
-        driver = new ChromeDriver();
+    public void checkboxCheck() {
+        ChromeOptions options = new ChromeOptions();
+        options.setAcceptInsecureCerts(true);
+        driver = new ChromeDriver(options);
         driver.manage().window().maximize();
         driver.get("https://demoqa.com/checkbox");
 
@@ -32,10 +37,8 @@ public class CheckBox {
         JavascriptExecutor jsExecutor = (JavascriptExecutor) driver;
         jsExecutor.executeScript("arguments[0].parentNode.removeChild(arguments[0])", trash);
 
-        WebElement expandAll = driver.findElement(By.xpath("//*[@class = 'rct-option rct-option-expand-all']"));
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", expandAll);
-        Thread.sleep(500);
-        expandAll.click();
+        WebDriverWait expandAll = new WebDriverWait(driver, 30);
+        expandAll.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@class = 'rct-option rct-option-expand-all']"))).click();
 
         Assert.assertEquals(driver.findElement(By.id("tree-node-wordFile")).isSelected(), false) ;
         Assert.assertEquals(driver.findElement(By.id("tree-node-excelFile")).isSelected(), false) ;

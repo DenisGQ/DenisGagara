@@ -6,6 +6,7 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.interactions.Actions;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
@@ -15,6 +16,7 @@ import org.testng.annotations.Test;
 public class ClickTest
 {
     WebDriver driver;
+
 
     @BeforeMethod
     public void setup()
@@ -29,8 +31,11 @@ public class ClickTest
     }
 
     @Test
-    public void testDoubleClick() throws InterruptedException {
-        driver = new ChromeDriver();
+    public void testDoubleClick() {
+        ChromeOptions options = new ChromeOptions();
+        options.setAcceptInsecureCerts(true);
+        driver = new ChromeDriver(options);
+        driver.manage().window().maximize();
         driver.get("https://demoqa.com/buttons");
 
         WebElement trash = driver.findElement(By.id("fixedban"));
@@ -40,12 +45,11 @@ public class ClickTest
         Actions actions = new Actions(driver);
         WebElement button = driver.findElement(By.id("doubleClickBtn"));
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", button);
-        Thread.sleep(500);
         actions.doubleClick(button).perform();
         Assert.assertEquals(driver.findElement(By.id("doubleClickMessage")).isDisplayed(), true);
     }
         @Test
-        public void testRigtClick() throws InterruptedException {
+        public void testRigtClick() {
             driver = new ChromeDriver();
             driver.get("https://demoqa.com/buttons");
 
@@ -56,13 +60,12 @@ public class ClickTest
             Actions actions = new Actions(driver);
             WebElement button = driver.findElement(By.id("rightClickBtn"));
             ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", button);
-            Thread.sleep(500);
             actions.contextClick(button).perform();
             Assert.assertEquals(driver.findElement(By.id("rightClickMessage")).isDisplayed(), true);
         }
 
         @Test
-        public void testDynamicClick () throws InterruptedException {
+        public void testDynamicClick () {
             driver = new ChromeDriver();
             driver.get("https://demoqa.com/buttons");
 
@@ -73,7 +76,6 @@ public class ClickTest
             Actions actions = new Actions(driver);
             WebElement button = driver.findElement(By.cssSelector(".mt-4 > button:not(#rightClickBtn.btn.btn-primary)"));
             ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", button);
-            Thread.sleep(500);
             actions.click(button).perform();
             Assert.assertEquals(driver.findElement(By.id("dynamicClickMessage")).isDisplayed(), true);
         }
